@@ -11,3 +11,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'NCTTorin-Light';
+  src: url('assets/fonts/NCTTorin-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'NCTTorin-Regular';
+  src: url('assets/fonts/NCTTorin-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'NCTTorin-Bold';
+  src: url('assets/fonts/NCTTorin-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'NCTTorin-ExtraBold';
+  src: url('assets/fonts/NCTTorin-ExtraBold.ttf') format('truetype');
+}
+
