@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/xyzartprint/static/css/main.e56a3044.css",
-    "main.js": "/xyzartprint/static/js/main.3e76ec3f.js",
+    "main.css": "/xyzartprint/static/css/main.28d00411.css",
+    "main.js": "/xyzartprint/static/js/main.09042acc.js",
     "static/js/592.2fc53f4c.chunk.js": "/xyzartprint/static/js/592.2fc53f4c.chunk.js",
     "static/media/NCTTorin-Light.ttf": "/xyzartprint/static/media/NCTTorin-Light.fbe7233577ed9c292b21.ttf",
     "static/media/NCTTorin-Regular.ttf": "/xyzartprint/static/media/NCTTorin-Regular.b5d158eefa20dabfeba7.ttf",
@@ -9,12 +9,12 @@
     "static/media/NCTTorin-ExtraBold.ttf": "/xyzartprint/static/media/NCTTorin-ExtraBold.ab1733201c46ef8062ad.ttf",
     "static/media/xyz-art-print-logo.svg": "/xyzartprint/static/media/xyz-art-print-logo.a3924012aaa6c7f7802c45b96f6f09d8.svg",
     "index.html": "/xyzartprint/index.html",
-    "main.e56a3044.css.map": "/xyzartprint/static/css/main.e56a3044.css.map",
-    "main.3e76ec3f.js.map": "/xyzartprint/static/js/main.3e76ec3f.js.map",
+    "main.28d00411.css.map": "/xyzartprint/static/css/main.28d00411.css.map",
+    "main.09042acc.js.map": "/xyzartprint/static/js/main.09042acc.js.map",
     "592.2fc53f4c.chunk.js.map": "/xyzartprint/static/js/592.2fc53f4c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e56a3044.css",
-    "static/js/main.3e76ec3f.js"
+    "static/css/main.28d00411.css",
+    "static/js/main.09042acc.js"
   ]
 }
