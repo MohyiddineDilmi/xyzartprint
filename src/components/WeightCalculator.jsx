@@ -11,11 +11,12 @@ const style = {
     left: 0,
     // width: '50vw',
     height: '50vh',
+    color: '#FF0000',
 };
 
 const materials = [
-    { name: 'PLA', density: 1.24 }, // Example density for PLA
-    { name: 'ABS', density: 1.25 }, // Example density for ABS
+    { name: 'PLA', density: 1.25 }, // Example density for PLA
+    { name: 'ABS', density: 1.04 }, // Example density for ABS
     // Add more materials as needed
 ];
 
@@ -66,13 +67,20 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
             const loader = new STLLoader();
             const geometry = loader.parse(event.target.result);
             setModel(geometry);
-            const volume = calculateVolume(geometry); // Calculate volume in cubic millimeters
-            const weightInGrams = (density * volume) / 1000; // Convert volume from cubic millimeters to cubic centimeters
+            
+            // Calculate volume in cubic millimeters
+            const originalVolume = calculateVolume(geometry); 
+            // Calculate volume with 12% internal filling
+            const filledVolume = originalVolume * 0.12;
+            
+            const weightInGrams = (density * filledVolume) / 1000; // Convert volume from cubic millimeters to cubic centimeters
             weightChange(weightInGrams);
         };
         reader.readAsArrayBuffer(file);
     };
+
     
+
     const calculateVolume = (geometry) => {
         const bbox = new THREE.Box3().setFromObject(new THREE.Mesh(geometry));
         const volume = bbox.getSize(new THREE.Vector3()).x * bbox.getSize(new THREE.Vector3()).y * bbox.getSize(new THREE.Vector3()).z;
@@ -112,7 +120,9 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
                         style={style}
                         orbitControls
                         shadows
+                        showAxes
                         url={URL.createObjectURL(selectedFile)}
+                        modelProps={{ color: selectedColor }}
                     />
                 )}
 
