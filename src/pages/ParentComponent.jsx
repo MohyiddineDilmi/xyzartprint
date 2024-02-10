@@ -11,9 +11,6 @@ function ParentComponent() {
 
   return (
     <div>
-      <p>
-        C:{selectedColor} W:{weight} M:{materialName}
-      </p>
       <div className={`${styles.flex_row}`}>
         <WeightCalculator
           selectedColor={selectedColor}

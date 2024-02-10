@@ -64,9 +64,6 @@ function ContactForm({selectedColor, weight, selectedMaterial }) {
 
   return (
       <form style={{paddingBottom: '2rem'}} onSubmit={handleSubmit}>
-        <p>
-          C:{selectedColor} W:{weight} M:{selectedMaterial}
-        </p>
         <div className={`${styles.input_wrapper}`}>
           <label htmlFor="name">Name (optional)</label>
           <input

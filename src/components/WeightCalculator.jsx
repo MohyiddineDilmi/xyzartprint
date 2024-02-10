@@ -4,7 +4,6 @@ import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import styles from '../modules/styles.module.css'
 import './weightCalculator.css'
-import ContactForm from './ContactForm';
 import { materials, colors } from "./constants";
 
 const style = {
@@ -12,9 +11,8 @@ const style = {
     left: 0,
     // width: '50vw',
     height: '50vh',
+    color: '#FF0000',
 };
-
-
 
 function WeightCalculation({selectedColor, handleColorChange, weight, weightChange, materialName, materialNameChange }) {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -53,14 +51,21 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
             const loader = new STLLoader();
             const geometry = loader.parse(event.target.result);
             setModel(geometry);
-            const volume = calculateVolume(geometry); // Calculate volume in cubic millimeters
-            const weightInGrams = (density * volume) / 1000; // Convert volume from cubic millimeters to cubic centimeters
+            
+            // Calculate volume in cubic millimeters
+            const originalVolume = calculateVolume(geometry); 
+            // Calculate volume with 12% internal filling
+            const filledVolume = originalVolume * 0.12;
+            
+            const weightInGrams = (density * filledVolume) / 1000; // Convert volume from cubic millimeters to cubic centimeters
             weightChange(weightInGrams);
             console.log('weight in gram', weightInGrams)
         };
         reader.readAsArrayBuffer(file);
     };
+
     
+
     const calculateVolume = (geometry) => {
         const bbox = new THREE.Box3().setFromObject(new THREE.Mesh(geometry));
         const volume = bbox.getSize(new THREE.Vector3()).x * bbox.getSize(new THREE.Vector3()).y * bbox.getSize(new THREE.Vector3()).z;
@@ -100,7 +105,9 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
                         style={style}
                         orbitControls
                         shadows
+                        showAxes
                         url={URL.createObjectURL(selectedFile)}
+                        modelProps={{ color: selectedColor }}
                     />
                 )}
 
