@@ -5,6 +5,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import styles from '../modules/styles.module.css'
 import './weightCalculator.css'
 import ContactForm from './ContactForm';
+import { materials, colors } from "./constants";
 
 const style = {
     top: 0,
@@ -13,31 +14,15 @@ const style = {
     height: '50vh',
 };
 
-const materials = [
-    { name: 'PLA', density: 1.24 }, // Example density for PLA
-    { name: 'ABS', density: 1.25 }, // Example density for ABS
-    // Add more materials as needed
-];
 
-const colors = [
-    { name: 'Black', code: '#000000' },
-    { name: 'White', code: '#FFFFFF' },
-    { name: 'Red', code: '#FF0000' },
-    { name: 'Green', code: '#00FF00' },
-    { name: 'Blue', code: '#0000FF' },
-    { name: 'Yellow', code: '#FFFF00' },
-    { name: 'Orange', code: '#FFA500' },
-    { name: 'Purple', code: '#800080' }
-];
 
-function WeightCalculation({selectedColor, handleColorChange, weight, weightChange}) {
+function WeightCalculation({selectedColor, handleColorChange, weight, weightChange, materialName, materialNameChange }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [model, setModel] = useState(null);
     // const [weight, setWeight] = useState(null);
     // const [selectedColor, setSelectedColor] = useState('#000000');
     const [error, setError] = useState(null);
     const [materialDensity, setMaterialDensity] = useState(materials[0].density); // Default to the density of the first material
-    const [materialName, setMaterialName] = useState(materials[0].name); // Default to the density of the first material
 
     const handleFileChange = (event) => {
         setError(null); // Clear any previous errors
@@ -47,12 +32,14 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
 
     const colorOnChange = (event) => {
         handleColorChange(event.target.value);
-        console.log(event.target.value)
+        console.log("color", event.target.value)
     };  
 
     const handleMaterialChange = (event) => {
-        setMaterialDensity(parseFloat(event.target.value)); // Update material density when user selects a different material
+        const material = materials.find( x => x.name == event.target.value);
+        setMaterialDensity(parseFloat((material || {}).density) || 0); // Update material density when user selects a different material
         calculateWeight(selectedFile, parseFloat(event.target.value)); // Recalculate weight using the selected file and new material density
+        materialNameChange(material.name)
     };
 
     const calculateWeight = (file, density) => {
@@ -69,6 +56,7 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
             const volume = calculateVolume(geometry); // Calculate volume in cubic millimeters
             const weightInGrams = (density * volume) / 1000; // Convert volume from cubic millimeters to cubic centimeters
             weightChange(weightInGrams);
+            console.log('weight in gram', weightInGrams)
         };
         reader.readAsArrayBuffer(file);
     };
@@ -88,9 +76,9 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
                 </div>  
 
                 {/* material selector */}
-                <select className={`${styles.button_style}`} value={materialDensity} onChange={handleMaterialChange}>
+                <select className={`${styles.button_style}`} value={materialName} onChange={handleMaterialChange}>
                     {materials.map(material => (
-                        <option key={material.name} name={material.name} value={material.density}>{material.name}</option>
+                        <option key={material.name} name={material.name} value={material.name}>{material.name}</option>
                     ))}
                 </select>
 
