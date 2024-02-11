@@ -7,6 +7,7 @@ import './weightCalculator.css'
 
 import { initializeApp } from 'firebase/app';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { materials, colors } from "./constants";
 
 
 // firebase Config
@@ -24,8 +25,6 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseApp);
 
-
-
 const style = {
     top: 0,
     left: 0,
@@ -34,29 +33,11 @@ const style = {
     color: '#FF0000',
 };
 
-const materials = [
-    { name: 'PLA', density: 1.25 }, // Example density for PLA
-    { name: 'ABS', density: 1.04 }, // Example density for ABS
-    // Add more materials as needed
-];
-
-const colors = [
-    { name: 'Black', code: '#000000' },
-    { name: 'White', code: '#FFFFFF' },
-    { name: 'Red', code: '#FF0000' },
-    { name: 'Green', code: '#00FF00' },
-    { name: 'Blue', code: '#0000FF' },
-    { name: 'Yellow', code: '#FFFF00' },
-    { name: 'Orange', code: '#FFA500' },
-    { name: 'Purple', code: '#800080' }
-];
-
-function WeightCalculation({selectedColor, handleColorChange, weight, weightChange, url, urlChange}) {
+function WeightCalculation({selectedColor, handleColorChange, weight, weightChange, materialName, materialNameChange, url, urlChange}) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [model, setModel] = useState(null);
     const [error, setError] = useState(null);
     const [materialDensity, setMaterialDensity] = useState(materials[0].density); // Default to the density of the first material
-    const [materialName, setMaterialName] = useState(materials[0].name); // Default to the density of the first material
 
     // Upload File
     // const [url, setUrl] = useState('');
@@ -91,12 +72,14 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
 
     const colorOnChange = (event) => {
         handleColorChange(event.target.value);
-        console.log(event.target.value)
+        console.log("color", event.target.value)
     };  
 
     const handleMaterialChange = (event) => {
-        setMaterialDensity(parseFloat(event.target.value)); // Update material density when user selects a different material
+        const material = materials.find( x => x.name == event.target.value);
+        setMaterialDensity(parseFloat((material || {}).density) || 0); // Update material density when user selects a different material
         calculateWeight(selectedFile, parseFloat(event.target.value)); // Recalculate weight using the selected file and new material density
+        materialNameChange(material.name)
     };
 
     const calculateWeight = (file, density) => {
@@ -117,6 +100,7 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
             
             const weightInGrams = (density * filledVolume) / 1000; // Convert volume from cubic millimeters to cubic centimeters
             weightChange(weightInGrams);
+            console.log('weight in gram', weightInGrams)
         };
         reader.readAsArrayBuffer(file);
     };
@@ -138,9 +122,9 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
                 </div>  
 
                 {/* material selector */}
-                <select className={`${styles.button_style}`} value={materialDensity} onChange={handleMaterialChange}>
+                <select className={`${styles.button_style}`} value={materialName} onChange={handleMaterialChange}>
                     {materials.map(material => (
-                        <option key={material.name} name={material.name} value={material.density}>{material.name}</option>
+                        <option key={material.name} name={material.name} value={material.name}>{material.name}</option>
                     ))}
                 </select>
 

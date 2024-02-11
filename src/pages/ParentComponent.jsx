@@ -6,7 +6,7 @@ import styles from '../modules/styles.module.css'
 function ParentComponent() {
 
   const [selectedColor, setSelectedColor] = useState('#000000');
-  const [weight, setWeight] = useState(null);
+  const [weight, setWeight] = useState(0);
   const [materialName, setMaterialName] = useState('PLA'); // Default to the density of the first material
   const [url, setUrl] = useState('');
 
@@ -21,11 +21,12 @@ function ParentComponent() {
           weightChange={setWeight}
           url={url}
           urlChange={setUrl}
-          // materialName={materialName}
-          // materialNameChange={setMaterialName}
+          materialName={materialName}
+          materialNameChange={setMaterialName}
         />
         <ContactForm
           selectedColor={selectedColor}
+          selectedMaterial={materialName}
           weight={weight}
           url={url}
           // materialName={materialName}
