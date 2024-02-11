@@ -4,7 +4,26 @@ import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import styles from '../modules/styles.module.css'
 import './weightCalculator.css'
+
+import { initializeApp } from 'firebase/app';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { materials, colors } from "./constants";
+
+
+// firebase Config
+const firebaseConfig = {
+    apiKey: "AIzaSyC9qTETiwoDTVQfgowwbkx7qK5kioi_pws",
+    authDomain: "xyz-art-print.firebaseapp.com",
+    projectId: "xyz-art-print",
+    storageBucket: "xyz-art-print.appspot.com",
+    messagingSenderId: "558816940225",
+    appId: "1:558816940225:web:b2b63d2ed1ce8f827a4440",
+    measurementId: "G-6WMVK4ZQ7L"
+};
+
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+const storage = getStorage(firebaseApp);
 
 const style = {
     top: 0,
@@ -14,18 +33,41 @@ const style = {
     color: '#FF0000',
 };
 
-function WeightCalculation({selectedColor, handleColorChange, weight, weightChange, materialName, materialNameChange }) {
+function WeightCalculation({selectedColor, handleColorChange, weight, weightChange, materialName, materialNameChange, url, urlChange}) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [model, setModel] = useState(null);
-    // const [weight, setWeight] = useState(null);
-    // const [selectedColor, setSelectedColor] = useState('#000000');
     const [error, setError] = useState(null);
     const [materialDensity, setMaterialDensity] = useState(materials[0].density); // Default to the density of the first material
+
+    // Upload File
+    // const [url, setUrl] = useState('');
+
+    const handleUpload = (file) => {
+        if (!file) {
+            console.error('No file selected');
+            return;
+        }
+
+        const storageRef = ref(storage);
+        const fileRef = ref(storageRef, file.name);
+
+        uploadBytes(fileRef, file).then(() => {
+            console.log('File uploaded successfully!');
+            getDownloadURL(fileRef).then((downloadURL) => {
+                console.log(downloadURL)
+                urlChange(downloadURL);
+            });
+            }).catch(error => {
+            console.error('Error uploading file:', error);
+        });
+    };
+
 
     const handleFileChange = (event) => {
         setError(null); // Clear any previous errors
         setSelectedFile(event.target.files[0]);
         calculateWeight(event.target.files[0], materialDensity); // Calculate weight using the selected file and current material density
+        handleUpload(event.target.files[0])
     };    
 
     const colorOnChange = (event) => {
@@ -45,7 +87,6 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
             setError('Please select an STL file.');
             return;
         }
-    
         const reader = new FileReader();
         reader.onload = (event) => {
             const loader = new STLLoader();
@@ -55,7 +96,7 @@ function WeightCalculation({selectedColor, handleColorChange, weight, weightChan
             // Calculate volume in cubic millimeters
             const originalVolume = calculateVolume(geometry); 
             // Calculate volume with 12% internal filling
-            const filledVolume = originalVolume * 0.12;
+            const filledVolume = originalVolume * 0.20;
             
             const weightInGrams = (density * filledVolume) / 1000; // Convert volume from cubic millimeters to cubic centimeters
             weightChange(weightInGrams);

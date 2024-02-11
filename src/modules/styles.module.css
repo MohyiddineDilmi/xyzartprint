@@ -190,4 +190,10 @@
         margin: 0% 0% 0% 0%;
     }
 
+    .flex_row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
   }

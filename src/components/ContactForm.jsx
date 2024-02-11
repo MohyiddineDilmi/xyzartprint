@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styles from '../modules/styles.module.css'
 import {colors, materials} from "./constants";
+import FormSent from './FormSent'; // Import the FormSent component
 
-function ContactForm({selectedColor, weight, selectedMaterial }) {
+function ContactForm({selectedColor, weight, selectedMaterial, url }) {
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -11,7 +12,10 @@ function ContactForm({selectedColor, weight, selectedMaterial }) {
     color: '',
     weight: '',
     material: '',
+    url: '', 
   });
+
+  const [formSubmitted, setFormSubmitted] = useState(false); // State to track form submission
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +43,7 @@ function ContactForm({selectedColor, weight, selectedMaterial }) {
             Color: "${(colorName||{}).name || selectedColor}",
             Weight: "${weight.toFixed(2)}",
             Material: "${selectedMaterial}",
+            Download URL: "${url}",
             \`\`\`
             `,
         }),
@@ -46,6 +51,7 @@ function ContactForm({selectedColor, weight, selectedMaterial }) {
   
       if (response.ok) {
         console.log('Form submitted successfully');
+        setFormSubmitted(true); // Set formSubmitted to true after successful submission
         // Optionally, reset the form after successful submission
         setFormData({
           name: '',
@@ -61,52 +67,58 @@ function ContactForm({selectedColor, weight, selectedMaterial }) {
     }
   };
   
+  // Conditionally render FormSent component if formSubmitted is true
+  if (formSubmitted) {
+    return <FormSent />;
+  }
 
   return (
-      <form style={{paddingBottom: '2rem'}} onSubmit={handleSubmit}>
-        <div className={`${styles.input_wrapper}`}>
-          <label htmlFor="name">Name (optional)</label>
-          <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-          />
-        </div>
-        <div className={`${styles.input_wrapper}`}>
-          <label htmlFor="phoneNumber">Phone number (required)</label>
-          <input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              required
-          />
-        </div>
-        <div className={`${styles.input_wrapper}`}>
-          <label htmlFor="email">Email (required)</label>
-          <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-          />
-        </div>
-        <div className={`${styles.input_wrapper}`}>
-          <label htmlFor="note">Note (optional)</label>
-          <textarea
-              id="note"
-              name="note"
-              value={formData.note}
-              onChange={handleChange}
-          />
-        </div>
-        <button type="submit" className={`${styles.print_button}`}>Print it</button>
-      </form>
+    <form style={{paddingBottom: '2rem'}} onSubmit={handleSubmit}>
+      <div className={`${styles.input_wrapper}`}>
+        <label htmlFor="name">Name (optional)</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+      </div>
+      <div className={`${styles.input_wrapper}`}>
+        <label htmlFor="phoneNumber">Phone number (required)</label>
+        <input
+          type="tel"
+          id="phoneNumber"
+          name="phoneNumber"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className={`${styles.input_wrapper}`}>
+        <label htmlFor="email">Email (required)</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className={`${styles.input_wrapper}`}>
+        <label htmlFor="note">Note (optional)</label>
+        <textarea
+          id="note"
+          name="note"
+          value={formData.note}
+          onChange={handleChange}
+          className={styles.textarea}
+        />
+      </div>
+      <button type="submit" className={`${styles.print_button}`}>Print it</button>
+    </form>
+
   );
 }
 

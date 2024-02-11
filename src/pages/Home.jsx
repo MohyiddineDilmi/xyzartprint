@@ -3,7 +3,6 @@ import AppBar from './AppBar';
 import Header from './Header';
 import ContactForm from '../components/ContactForm';
 import WeightCalculation from '../components/WeightCalculator'
-import styles from '../modules/styles.module.css'
 import ParentComponent from './ParentComponent'
 import ContactUs from '../components/ContactUs';
 
