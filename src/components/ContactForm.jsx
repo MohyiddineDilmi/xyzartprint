@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from '../modules/styles.module.css'
+import FormSent from './FormSent'; // Import the FormSent component
 
-function ContactForm({selectedColor, weight, materialDensity}) {
+function ContactForm({selectedColor, weight, materialDensity, url}) {
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -10,7 +11,10 @@ function ContactForm({selectedColor, weight, materialDensity}) {
     color: '',
     weight: '',
     material: '',
+    url: '', 
   });
+
+  const [formSubmitted, setFormSubmitted] = useState(false); // State to track form submission
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,6 +41,7 @@ function ContactForm({selectedColor, weight, materialDensity}) {
             Color: "${selectedColor}",
             Weight: "${weight}",
             Material: "${materialDensity}",
+            Download URL: "${url}",
             \`\`\`
             `,
         }),
@@ -44,6 +49,7 @@ function ContactForm({selectedColor, weight, materialDensity}) {
   
       if (response.ok) {
         console.log('Form submitted successfully');
+        setFormSubmitted(true); // Set formSubmitted to true after successful submission
         // Optionally, reset the form after successful submission
         setFormData({
           name: '',
@@ -59,6 +65,10 @@ function ContactForm({selectedColor, weight, materialDensity}) {
     }
   };
   
+  // Conditionally render FormSent component if formSubmitted is true
+  if (formSubmitted) {
+    return <FormSent />;
+  }
 
   return (
     <form style={{paddingBottom: '2rem'}} onSubmit={handleSubmit}>
@@ -101,9 +111,10 @@ function ContactForm({selectedColor, weight, materialDensity}) {
           name="note"
           value={formData.note}
           onChange={handleChange}
+          className={styles.textarea}
         />
       </div>
-      <button type="submit" className={`${styles.print_button}`} >Print it</button>
+      <button type="submit" className={`${styles.print_button}`}>Print it</button>
     </form>
   );
 }

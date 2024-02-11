@@ -8,6 +8,8 @@ function ParentComponent() {
   const [selectedColor, setSelectedColor] = useState('#000000');
   const [weight, setWeight] = useState(null);
   const [materialName, setMaterialName] = useState('PLA'); // Default to the density of the first material
+  const [url, setUrl] = useState('');
+
 
   return (
     <div>
@@ -17,12 +19,15 @@ function ParentComponent() {
           handleColorChange={setSelectedColor}
           weight={weight}
           weightChange={setWeight}
+          url={url}
+          urlChange={setUrl}
           // materialName={materialName}
           // materialNameChange={setMaterialName}
         />
         <ContactForm
           selectedColor={selectedColor}
           weight={weight}
+          url={url}
           // materialName={materialName}
         />
       </div>
